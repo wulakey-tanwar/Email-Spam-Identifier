@@ -8,28 +8,28 @@ app = Flask(__name__)
 CORS(app)
 
 # Simple database connection
+
 def get_db():
     return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='',
-        database='spam_detector'
+        host=os.getenv('DB_HOST', 'localhost'),
+        user=os.getenv('DB_USER', 'root'),
+        password=os.getenv('DB_PASSWORD', ''),
+        database=os.getenv('DB_NAME', 'spam_detector')
     )
 
 # Create database and tables if they don't exist
 def init_db():
     try:
-        # Connect without database first
         conn = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password=''
+            host=os.getenv('DB_HOST', 'localhost'),
+            user=os.getenv('DB_USER', 'root'),
+            password=os.getenv('DB_PASSWORD', '')
         )
         cursor = conn.cursor()
+        db_name = os.getenv('DB_NAME', 'spam_detector')
         
-        # Create database
-        cursor.execute("CREATE DATABASE IF NOT EXISTS spam_detector")
-        cursor.execute("USE spam_detector")
+        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
+        cursor.execute(f"USE {db_name}")
         
         # Create tables
         cursor.execute("""
@@ -146,4 +146,4 @@ def analyze_images():
 
 if __name__ == '__main__':
     # Running locally on port 5000
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
