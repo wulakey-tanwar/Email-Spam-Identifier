@@ -48,6 +48,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
 
   const generateRecommendations = (result) => {
     const recommendations = []
+    const patterns = result.detectedPatterns || {}
     
     if (result.isSpam) {
       // High spam confidence - urgent actions needed
@@ -73,7 +74,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
       })
       
       // Pattern-specific recommendations
-      if (result.detectedPatterns.urgentKeywords.length > 0) {
+      if (patterns.urgentKeywords && patterns.urgentKeywords.length > 0) {
         recommendations.push({
           priority: 'medium',
           icon: '⚠️',
@@ -82,7 +83,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
         })
       }
       
-      if (result.detectedPatterns.socialEngineering.length > 0) {
+      if (patterns.socialEngineering && patterns.socialEngineering.length > 0) {
         recommendations.push({
           priority: 'high',
           icon: '🎭',
@@ -91,7 +92,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
         })
       }
       
-      if (result.detectedPatterns.urlPatterns.length > 0) {
+      if (patterns.urlPatterns && patterns.urlPatterns.length > 0) {
         recommendations.push({
           priority: 'medium',
           icon: '🔗',
@@ -100,7 +101,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
         })
       }
       
-      if (result.detectedPatterns.numberPatterns.length > 0) {
+      if (patterns.numberPatterns && patterns.numberPatterns.length > 0) {
         recommendations.push({
           priority: 'medium',
           icon: '💰',
@@ -133,7 +134,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
         category: 'caution'
       })
       
-      if (result.detectedPatterns.urgentKeywords.length > 0) {
+      if (patterns.urgentKeywords && patterns.urgentKeywords.length > 0) {
         recommendations.push({
           priority: 'medium',
           icon: '⏰',
@@ -142,7 +143,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
         })
       }
       
-      if (result.detectedPatterns.urlPatterns.length > 0) {
+      if (patterns.urlPatterns && patterns.urlPatterns.length > 0) {
         recommendations.push({
           priority: 'medium',
           icon: '🔍',
@@ -336,23 +337,23 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
                 <h3 className="font-medium text-blue-700 dark:text-blue-300 mb-3 transition-colors duration-300">🔍 Advanced Analysis Breakdown</h3>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{analysisResult.analysisDetails.keywordRisk.toFixed(1)}</div>
+                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{(analysisResult.analysisDetails.keywordRisk || 0).toFixed(1)}</div>
                     <div className="text-xs text-blue-500 dark:text-blue-400 transition-colors duration-300">Keyword Risk</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{analysisResult.analysisDetails.behavioralRisk.toFixed(1)}</div>
+                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{(analysisResult.analysisDetails.behavioralRisk || 0).toFixed(1)}</div>
                     <div className="text-xs text-blue-500 dark:text-blue-400 transition-colors duration-300">Behavioral Risk</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{analysisResult.analysisDetails.technicalRisk.toFixed(1)}</div>
+                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{(analysisResult.analysisDetails.technicalRisk || 0).toFixed(1)}</div>
                     <div className="text-xs text-blue-500 dark:text-blue-400 transition-colors duration-300">Technical Risk</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{analysisResult.analysisDetails.socialRisk.toFixed(1)}</div>
+                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{(analysisResult.analysisDetails.socialRisk || 0).toFixed(1)}</div>
                     <div className="text-xs text-blue-500 dark:text-blue-400 transition-colors duration-300">Social Risk</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{analysisResult.analysisDetails.formattingRisk.toFixed(1)}</div>
+                    <div className="text-lg font-semibold text-blue-600 dark:text-blue-400 transition-colors duration-300">{(analysisResult.analysisDetails.formattingRisk || 0).toFixed(1)}</div>
                     <div className="text-xs text-blue-500 dark:text-blue-400 transition-colors duration-300">Formatting Risk</div>
                   </div>
                 </div>
@@ -363,15 +364,15 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 transition-colors duration-300">
               <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Detection Score</h3>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400 transition-colors duration-300">Spam indicators found: {analysisResult.totalScore.toFixed(1)}</span>
-                <span className="text-gray-600 dark:text-gray-400 transition-colors duration-300">Max possible score: {analysisResult.maxPossibleScore.toFixed(1)}</span>
+                <span className="text-gray-600 dark:text-gray-400 transition-colors duration-300">Spam indicators found: {(analysisResult.totalScore || 0).toFixed(1)}</span>
+                <span className="text-gray-600 dark:text-gray-400 transition-colors duration-300">Max possible score: {(analysisResult.maxPossibleScore || 100).toFixed(1)}</span>
               </div>
             </div>
 
             {/* Enhanced Pattern Detection */}
             <div className="space-y-3">
               {/* Urgent Keywords */}
-              {analysisResult.detectedPatterns.urgentKeywords.length > 0 && (
+              {analysisResult.detectedPatterns?.urgentKeywords?.length > 0 && (
                 <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 transition-colors duration-300">
                   <h3 className="font-medium text-red-700 dark:text-red-400 mb-2 transition-colors duration-300">🚨 High-Risk Keywords</h3>
                   <div className="flex flex-wrap gap-2">
@@ -388,7 +389,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
               )}
 
               {/* Social Engineering */}
-              {analysisResult.detectedPatterns.socialEngineering.length > 0 && (
+              {analysisResult.detectedPatterns?.socialEngineering?.length > 0 && (
                 <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 transition-colors duration-300">
                   <h3 className="font-medium text-purple-700 dark:text-purple-400 mb-2 transition-colors duration-300">🎭 Social Engineering Tactics</h3>
                   <div className="flex flex-wrap gap-2">
@@ -405,7 +406,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
               )}
 
               {/* Technical Indicators */}
-              {analysisResult.detectedPatterns.technicalIndicators.length > 0 && (
+              {analysisResult.detectedPatterns?.technicalIndicators?.length > 0 && (
                 <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 transition-colors duration-300">
                   <h3 className="font-medium text-orange-700 dark:text-orange-400 mb-2 transition-colors duration-300">⚙️ Technical Indicators</h3>
                   <div className="flex flex-wrap gap-2">
@@ -422,7 +423,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
               )}
 
               {/* Button Patterns */}
-              {analysisResult.detectedPatterns.buttonPatterns.length > 0 && (
+              {analysisResult.detectedPatterns?.buttonPatterns?.length > 0 && (
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 transition-colors duration-300">
                   <h3 className="font-medium text-yellow-700 dark:text-yellow-400 mb-2 transition-colors duration-300">🔘 Button-like Text</h3>
                   <div className="flex flex-wrap gap-2">
@@ -439,7 +440,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
               )}
 
               {/* Number Patterns */}
-              {analysisResult.detectedPatterns.numberPatterns.length > 0 && (
+              {analysisResult.detectedPatterns?.numberPatterns?.length > 0 && (
                 <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 transition-colors duration-300">
                   <h3 className="font-medium text-indigo-700 dark:text-indigo-400 mb-2 transition-colors duration-300">🔢 Suspicious Numbers</h3>
                   <div className="flex flex-wrap gap-2">
@@ -456,7 +457,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
               )}
 
               {/* URL Patterns */}
-              {analysisResult.detectedPatterns.urlPatterns.length > 0 && (
+              {analysisResult.detectedPatterns?.urlPatterns?.length > 0 && (
                 <div className="bg-pink-50 dark:bg-pink-900/20 rounded-lg p-4 transition-colors duration-300">
                   <h3 className="font-medium text-pink-700 dark:text-pink-400 mb-2 transition-colors duration-300">🔗 URLs & Links</h3>
                   <div className="flex flex-wrap gap-2">
@@ -473,7 +474,7 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
               )}
 
               {/* ALL CAPS Words */}
-              {analysisResult.detectedPatterns.allCapsWords.length > 0 && (
+              {analysisResult.detectedPatterns?.allCapsWords?.length > 0 && (
                 <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 transition-colors duration-300">
                   <h3 className="font-medium text-blue-700 dark:text-blue-400 mb-2 transition-colors duration-300">📢 ALL CAPS Words</h3>
                   <div className="flex flex-wrap gap-2">
@@ -511,19 +512,19 @@ const AnalysisResults = ({ analysisResult, imageResults, analysisType }) => {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600 dark:text-gray-400 transition-colors duration-300">Image Spam Confidence:</span>
-                    <span className={`font-semibold ${getConfidenceColor(imageResult.analysis.confidence)}`}>
-                      {imageResult.analysis.confidence.toFixed(1)}%
+                    <span className={`font-semibold ${getConfidenceColor(imageResult.analysis.confidence || 0)}`}>
+                      {(imageResult.analysis.confidence || 0).toFixed(1)}%
                     </span>
                   </div>
                   
-                  {imageResult.analysis.detectedPatterns.length > 0 && (
+                  {imageResult.analysis.detectedPatterns && imageResult.analysis.detectedPatterns.length > 0 && (
                     <div className="space-y-2">
                       <span className="text-xs font-medium text-gray-600 dark:text-gray-400 transition-colors duration-300">Detected Patterns:</span>
                       {imageResult.analysis.detectedPatterns.map((pattern, pIndex) => (
                         <div key={pIndex} className="bg-white dark:bg-gray-600 rounded p-2 text-xs transition-colors duration-300">
                           <div className="font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">{pattern.description}</div>
                           <div className="text-gray-500 dark:text-gray-400 transition-colors duration-300">
-                            Score: {pattern.score.toFixed(1)} | 
+                            Score: {(pattern.score || 0).toFixed(1)} | 
                             {pattern.details && Object.entries(pattern.details).map(([key, value]) => (
                               <span key={key} className="ml-2">{key}: {value}</span>
                             ))}

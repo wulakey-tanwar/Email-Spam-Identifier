@@ -78,8 +78,28 @@ def analyze_email():
     # Dummy response (replace later with ML model)
     result = {
         'isSpam': False,
-        'confidence': 0.95,
-        'details': f'Processed email: {email_content[:30]}... (dummy analysis)'
+        'confidence': 25.5,
+        'totalScore': 12.5,
+        'maxPossibleScore': 100.0,
+        'detectedPatterns': {
+            'urgentKeywords': [],
+            'buttonPatterns': [],
+            'numberPatterns': [],
+            'urlPatterns': [],
+            'formattingPatterns': [],
+            'allCapsWords': [],
+            'suspiciousPhrases': [],
+            'socialEngineering': [],
+            'technicalIndicators': []
+        },
+        'riskLevel': 'LOW',
+        'analysisDetails': {
+            'keywordRisk': 5.0,
+            'behavioralRisk': 3.0,
+            'technicalRisk': 2.0,
+            'socialRisk': 1.5,
+            'formattingRisk': 1.0
+        }
     }
     
     # Save to database for model improvement
@@ -116,12 +136,16 @@ def analyze_images():
     for img in images:
         analysis_result = {
             'isSpam': False,
-            'confidence': 0.90,
-            'details': 'Dummy image analysis.'
+            'confidence': 15.0,
+            'totalScore': 8.0,
+            'maxPossibleScore': 100.0,
+            'detectedPatterns': [],
+            'spamProbability': 15.0
         }
         
         results.append({
-            'id': img.get('id'),
+            'imageId': img.get('id'),
+            'fileName': img.get('name', f'image_{img.get("id")}'),
             'analysis': analysis_result
         })
         

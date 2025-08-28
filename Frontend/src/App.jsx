@@ -28,7 +28,9 @@ function App() {
     setAnalysisType('text')
     
     try {
+      console.log('Starting text analysis...')
       const result = await analyzeEmail(emailContent)
+      console.log('Text analysis result:', result)
       if (result) {
         setConfidence(result.confidence)
         setAnalysisResult(result)
@@ -36,6 +38,8 @@ function App() {
       }
     } catch (error) {
       console.error('Text analysis failed:', error)
+      // Show error to user
+      alert(`Analysis failed: ${error.message}. Please check if the backend server is running.`)
     } finally {
       setIsAnalyzing(false)
     }
@@ -48,16 +52,20 @@ function App() {
     setAnalysisType('images')
     
     try {
+      console.log('Starting image analysis...')
       const result = await analyzeImages(images)
+      console.log('Image analysis result:', result)
       if (result) {
         // Calculate average confidence from all images
-        const avgConfidence = result.reduce((sum, img) => sum + img.analysis.confidence, 0) / result.length
+        const avgConfidence = result.reduce((sum, img) => sum + (img.analysis?.confidence || 0), 0) / result.length
         setConfidence(avgConfidence)
         setImageResults(result)
         setAnalysisResult(null) // Clear previous text results
       }
     } catch (error) {
       console.error('Image analysis failed:', error)
+      // Show error to user
+      alert(`Image analysis failed: ${error.message}. Please check if the backend server is running.`)
     } finally {
       setIsAnalyzing(false)
     }
@@ -92,13 +100,15 @@ function App() {
         setImageResults(imageAnalysis)
         // If no text analysis, use image confidence
         if (!emailAnalysis) {
-          const avgImageConfidence = imageAnalysis.reduce((sum, img) => sum + img.analysis.confidence, 0) / imageAnalysis.length
+          const avgImageConfidence = imageAnalysis.reduce((sum, img) => sum + (img.analysis?.confidence || 0), 0) / imageAnalysis.length
           setConfidence(avgImageConfidence)
         }
       }
       
     } catch (error) {
       console.error('Combined analysis failed:', error)
+      // Show error to user
+      alert(`Combined analysis failed: ${error.message}. Please check if the backend server is running.`)
     } finally {
       setIsAnalyzing(false)
     }
