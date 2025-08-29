@@ -1,9 +1,11 @@
 // Advanced AI/ML Spam Detection Engine
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
+
 export const analyzeEmail = async (emailContent) => {
   if (!emailContent.trim()) return null
   
   try {
-    const response = await fetch('http://localhost:5000/analyze-email', {
+    const response = await fetch(`${API_BASE}/api/analyze-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

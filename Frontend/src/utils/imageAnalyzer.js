@@ -1,9 +1,11 @@
 // Image-based spam detection logic
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ''
+
 export const analyzeImages = async (images) => {
   if (!images || images.length === 0) return null
   
   try {
-    const response = await fetch('http://localhost:5000/analyze-images', {
+    const response = await fetch(`${API_BASE}/api/analyze-images`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: spam-analyzer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: your-dockerhub-username/spam-frontend:latest
+          env:
+            - name: VITE_API_BASE_URL
+              value: http://backend-service.spam-analyzer.svc.cluster.local:5000
+          ports:
+            - containerPort: 5173
